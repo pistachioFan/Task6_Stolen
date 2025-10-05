@@ -53,7 +53,7 @@ fun IppotecaApp (
                     onStartSummChange = { viewModel.uodateStartSumm(it)},
                     onProcientChange = { viewModel.updateProcient(it)},
                     onNextButtonCliced = { navController.navigate(VkladScreen.Period.name)},
-                    onCancelButtonCliced = {},
+                    onCancelButtonCliced = {onCancelButtonClicked(viewModel, navController)},
                     modifier = Modifier.fillMaxSize()
                 )
             }
@@ -63,7 +63,7 @@ fun IppotecaApp (
                     onEveryMonthChange = {viewModel.updateEveryMounthPay(it)},
                     onPeriodChange = { viewModel.updatePeriod(it)},
                     onNextButtonCliced = { navController.navigate(VkladScreen.Summary.name)},
-                    onCencelButtonCliced = {},
+                    onCencelButtonCliced = {onCancelButtonClicked(viewModel, navController)},
                     modifier = Modifier.fillMaxSize()
                 )
             }
@@ -71,9 +71,19 @@ fun IppotecaApp (
             composable (route = VkladScreen.Summary.name) {
                 SummaryScreen(
                     viewModel = viewModel,
+                    onHomeButtonCliced = {onCancelButtonClicked(viewModel, navController)},
                     modifier = Modifier.fillMaxSize()
                 )
             }
         }
     }
+}
+
+
+fun onCancelButtonClicked(
+    viewModel: VkladViewModel,
+    navController: NavHostController
+){
+    viewModel.resetVklad()
+    navController.popBackStack(VkladScreen.Start.name, inclusive = false)
 }

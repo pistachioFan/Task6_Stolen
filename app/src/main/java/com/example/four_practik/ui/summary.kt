@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -25,11 +26,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.four_practik.ui.theme.Black
 import com.example.four_practik.ui.theme.White
 
 @Composable
 fun SummaryScreen(
     viewModel: VkladViewModel = viewModel(),
+    onHomeButtonCliced:() -> Unit,
     modifier: Modifier = Modifier
 ) {
     val state = viewModel.uiState
@@ -39,11 +42,29 @@ fun SummaryScreen(
         verticalArrangement = Arrangement.Center
     ) {
         Text(text = "Стартовая сумма: ${state.collectAsState().value.startSumm}",
-            modifier = Modifier.padding(top = 5.dp, end = 5.dp).size(width = 250.dp, height = 20.dp),
-            textAlign = TextAlign.Center,)
-        Text(text = "Процент: ${state.collectAsState().value.procient}")
-        Text(text = "Период: ${state.collectAsState().value.period} месяцев")
-        Text(text = "Итоговая сумма: ${state.collectAsState().value.summary}")
+            modifier = Modifier.padding(bottom = 10.dp),
+            fontSize = 20.sp,)
+        Text(text = "Процент: ${state.collectAsState().value.procient}",
+            modifier = Modifier.padding(bottom = 10.dp),
+            fontSize = 20.sp)
+        Text(text = "Период: ${state.collectAsState().value.period} месяцев",
+            modifier = Modifier.padding(bottom = 10.dp),
+            fontSize = 20.sp)
+        Text(text = "Итоговая сумма: ${state.collectAsState().value.summary}",
+            modifier = Modifier.padding(bottom = 10.dp),
+            fontSize = 20.sp)
+
+        Spacer(Modifier.padding(top = 30.dp))
+
+        Button(
+            onClick = onHomeButtonCliced,
+            modifier = Modifier.size(height = 50.dp, width = 150.dp),
+            colors = ButtonColors(Black, contentColor = White, disabledContentColor = Black, disabledContainerColor = White)
+
+        ) {
+            Text("Домой",
+                fontSize = 30.sp)
+        }
     }
 }
 
@@ -54,5 +75,6 @@ fun SummaryScreen(
 fun SummaryScreenPreview(
 ) {
     SummaryScreen(
+        onHomeButtonCliced = {}
     )
 }

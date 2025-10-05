@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -32,7 +34,7 @@ fun PeriodScreen(
 
     Column(
 
-        modifier = Modifier.fillMaxSize().padding(top = 100.dp),
+        modifier = Modifier.fillMaxSize().padding(top = 250.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         var everymounthdodep by remember() { mutableStateOf("") }
@@ -40,17 +42,19 @@ fun PeriodScreen(
             value = everymounthdodep,
             onValueChange = {everymounthdodep = it
                             onEveryMonthChange(it)},
-            label = { Text("Введите ежемесечный платёж") }
+            label = { Text("Введите ежемесечный платёж") },
+            shape = RoundedCornerShape(15.dp)
         )
 
-        Spacer (Modifier.padding(30.dp))
+        Spacer (Modifier.height(30.dp))
 
         var period by remember { mutableStateOf("") }
         OutlinedTextField(
             value = period,
             onValueChange = { period = it
                             onPeriodChange(it)},
-            label = { Text("Ведите период")}
+            label = { Text("Ведите период")},
+            shape = RoundedCornerShape(15.dp)
         )
 
         Spacer(modifier = Modifier.padding(30.dp))

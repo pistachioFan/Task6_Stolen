@@ -17,7 +17,7 @@ class VkladViewModel: ViewModel (){
         _uiState.update { currentState ->
             val newSummary = (startSumm + _uiState.value.everyMounthPay * _uiState.value.period) + (startSumm + _uiState.value.everyMounthPay * _uiState.value.period) * ((_uiState.value.procient / 100) / 12 * _uiState.value.period)
             currentState.copy(
-                summary = newSummary,
+                summary = newSummary.toInt(),
                 startSumm = startSumm
             )
         }
@@ -29,7 +29,7 @@ class VkladViewModel: ViewModel (){
         _uiState.update { currentState ->
             val newSummary = (_uiState.value.startSumm + _uiState.value.everyMounthPay * _uiState.value.period) + (_uiState.value.startSumm + _uiState.value.everyMounthPay * _uiState.value.period) * ((procient / 100) / 12 * _uiState.value.period)
             currentState.copy(
-                summary = newSummary,
+                summary = newSummary.toInt(),
                 procient = procient
             )
         }
@@ -40,18 +40,18 @@ class VkladViewModel: ViewModel (){
         _uiState.update { currentState ->
             val newSummary = (_uiState.value.startSumm + everyMounthPay * _uiState.value.period) + (_uiState.value.startSumm + everyMounthPay * _uiState.value.period) * ((_uiState.value.procient / 100) / 12 * _uiState.value.period)
             currentState.copy(
-                summary = newSummary,
+                summary = newSummary.toInt(),
                 everyMounthPay = everyMounthPay
             )
         }
     }
 
     fun updatePeriod (value: String) {
-        val period = value.toDoubleOrNull() ?: 0.0
+        val period = value.toIntOrNull() ?: 0
         _uiState.update { currentState ->
             val newSummary = (_uiState.value.startSumm + _uiState.value.everyMounthPay * period) + (_uiState.value.startSumm + _uiState.value.everyMounthPay * period) * ((_uiState.value.procient/ 100) / 12 * period)
             currentState.copy(
-                summary = newSummary,
+                summary = newSummary.toInt(),
                 period = period
             )
         }
