@@ -24,10 +24,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.four_practik.ui.theme.Black
 import com.example.four_practik.ui.theme.White
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun SummaryScreen(
@@ -36,6 +39,8 @@ fun SummaryScreen(
     modifier: Modifier = Modifier
 ) {
     val state = viewModel.uiState
+    val coroutineScope = rememberCoroutineScope()
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -64,6 +69,16 @@ fun SummaryScreen(
         ) {
             Text("Домой",
                 fontSize = 30.sp)
+        }
+
+        Spacer(Modifier.padding(top = 30.dp))
+
+        Button(
+            onClick = { coroutineScope.launch {
+                viewModel.saveVklad()
+                onHomeButtonCliced} },
+        ) {
+            Text("Сохранить")
         }
     }
 }

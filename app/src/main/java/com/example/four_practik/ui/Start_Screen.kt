@@ -5,6 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ripple.rememberRipple
@@ -24,6 +26,7 @@ import com.example.four_practik.R
 @Composable
 fun StartScreen(
     onStartOrderButtonClicked: () -> Unit,
+    onListButtonClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -42,6 +45,14 @@ fun StartScreen(
         )
 
         Text("Начать копить!")
+
+        Spacer(modifier = Modifier.padding(top = 20.dp))
+
+        Button(
+            onClick = onListButtonClicked
+        ) {
+            Text("Список")
+        }
 
     }
 }

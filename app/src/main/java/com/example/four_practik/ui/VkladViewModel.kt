@@ -1,16 +1,43 @@
 package com.example.four_practik.ui
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.four_practik.data.VkladRepository
+import com.example.four_practik.data.Vklads
 import com.example.four_practik.model.VkladUiState
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
-class VkladViewModel: ViewModel (){
+class VkladViewModel(private val VkladRepository: VkladRepository): ViewModel (){
     private val _uiState = MutableStateFlow(VkladUiState())
-
+    data class ListUiState(val vkladList: List<Vklads> = listOf())
     val uiState: StateFlow<VkladUiState> = _uiState.asStateFlow()
+
+    suspend fun saveVklad(){
+        VkladRepository.insert(_uiState.value.toVklads())
+    }
+
+    val listUiState: StateFlow<ListUiState> =
+        VkladRepository.getAllItems().map { ListUiState(it) }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000L),
+                initialValue = ListUiState()
+            )
+
+    fun VkladUiState.toVklads() = Vklads(
+        id = 0,
+        startSumm = startSumm,
+        procient = procient,
+        everyMounthPay = everyMounthPay,
+        period = period,
+    )
 
     fun uodateStartSumm (value: String){
         val startSumm = value.toDoubleOrNull() ?: 0.0
