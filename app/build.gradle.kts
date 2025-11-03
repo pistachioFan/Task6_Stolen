@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("com.google.devtools.ksp")
 }
 
 android {
@@ -38,12 +37,18 @@ android {
     buildFeatures {
         compose = true
     }
+    buildTypes {
+        debug {
+            buildConfigField("String", "API_BASE_URL", "\"https://example.com/api/\"")
+        }
+        release {
+            buildConfigField("String", "API_BASE_URL", "\"https://example.com/api/\"")
+        }
+    }
 }
 
 dependencies {
-    val room_version = "2.8.3"
-    implementation("androidx.room:room-runtime:$room_version")
-    ksp("androidx.room:room-compiler:2.8.3")
+    // Room removed with old project cleanup
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -54,6 +59,15 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
+    // Networking
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging)
+    // DataStore
+    implementation(libs.androidx.datastore.preferences)
+    // Images
+    implementation(libs.coil.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

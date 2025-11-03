@@ -12,15 +12,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.four_practik.ui.theme.Four_practikTheme
+import com.example.four_practik.auth.AuthApp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            Four_practikTheme {
-                IppotecaApp()
-            }
+            Four_practikTheme { AuthApp() }
         }
     }
 }
