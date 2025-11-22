@@ -6,10 +6,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiConfig {
     @Volatile
-    var baseUrl: String = "https://example.com/api/"
+    var baseUrl: String = "http://192.168.200.160:8080/api/"
 }
 
-object ApiProvider {
+object  ApiProvider {
     @Volatile
     private var retrofit: Retrofit? = null
 
