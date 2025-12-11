@@ -44,33 +44,21 @@ class AuthRepository(
                 authAllowed = true,
                 person = person
             )
-            
-            // Log the JSON being sent
-            val gson = Gson()
-            val jsonRequest = gson.toJson(request)
-            Log.d("AuthRepository", "Register Request JSON: $jsonRequest")
-            Log.d("AuthRepository", "Group ID being sent: $groupId")
-            
+
             val response = api.register(request)
             val responseCode = response.code()
-            
-            // Log response
-            Log.d("AuthRepository", "Register Response Code: $responseCode")
             
             if (response.isSuccessful) {
                 try {
                     val responseBody = response.body()
                     val token = responseBody?.token
-                    Log.d("AuthRepository", "Register Response Token: $token")
+
                     if (!token.isNullOrBlank()) {
                         Result.success(Pair(token, responseCode))
                     } else {
-                        Log.e("AuthRepository", "Empty token received. Response code: $responseCode")
                         Result.failure(Exception("Empty token. Response code: $responseCode"))
                     }
                 } catch (e: Exception) {
-                    Log.e("AuthRepository", "Error parsing register response: ${e.message}", e)
-                    Log.e("AuthRepository", "Exception type: ${e.javaClass.simpleName}")
                     Result.failure(Exception("Parse error: ${e.message}"))
                 }
             } else {
@@ -136,7 +124,7 @@ class AuthRepository(
                 // Handle direct list response
                 if (body is List<*>) {
                     @Suppress("UNCHECKED_CAST")
-                    Result.success(body as? List<GroupDto> ?: emptyList())
+                    Result.success(body ?: emptyList())
                 } else {
                     // Handle wrapped response or empty
                     Result.success(emptyList())

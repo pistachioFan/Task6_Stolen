@@ -13,15 +13,7 @@ object  ApiProvider {
     @Volatile
     private var retrofit: Retrofit? = null
 
-    @Synchronized
-    fun updateBaseUrl(newBaseUrl: String) {
-        ApiConfig.baseUrl = newBaseUrl
-        retrofit = null
-    }
-
     private fun getRetrofit(): Retrofit {
-        val cached = retrofit
-        if (cached != null) return cached
         val logging = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
         val client = OkHttpClient.Builder().addInterceptor(logging).build()
         val created = Retrofit.Builder()

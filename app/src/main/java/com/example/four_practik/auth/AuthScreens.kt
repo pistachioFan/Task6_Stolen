@@ -118,14 +118,14 @@ fun RegisterScreen(vm: AuthViewModel, onRegistered: () -> Unit, onGoToLogin: () 
     val gender = "MALE"
     
     // Gson for JSON formatting
-    val gson = remember { GsonBuilder().setPrettyPrinting().create() }
+    //val gson = remember { GsonBuilder().setPrettyPrinting().create() }
 
     // Fetch groups when screen is first displayed
-    LaunchedEffect(Unit) {
-        if (state.groups.isEmpty()) {
-            vm.loadGroups()
-        }
+    //LaunchedEffect(Unit) {
+    if (state.groups.isEmpty()) {
+        vm.loadGroups()
     }
+    //}
 
     // Generate JSON preview
     val jsonPreview = remember(login, password, email, selectedGroup) {
@@ -148,7 +148,7 @@ fun RegisterScreen(vm: AuthViewModel, onRegistered: () -> Unit, onGoToLogin: () 
                     authAllowed = true,
                     person = person
                 )
-                gson.toJson(request)
+                //gson.toJson(request)  //HERE HERE HERE
             } catch (e: Exception) {
                 "Error generating JSON: ${e.message}"
             }
@@ -227,7 +227,7 @@ fun RegisterScreen(vm: AuthViewModel, onRegistered: () -> Unit, onGoToLogin: () 
             )
         }
         
-        Spacer(Modifier.height(24.dp))
+        /*Spacer(Modifier.height(24.dp))
         
         // JSON Preview Card at the bottom
         Card(
@@ -250,13 +250,13 @@ fun RegisterScreen(vm: AuthViewModel, onRegistered: () -> Unit, onGoToLogin: () 
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-        }
+        }*/
         
         Spacer(Modifier.height(16.dp))
         Button(
             onClick = {
                 if (selectedGroup != null) {
-                    AndroidLog.d("RegisterScreen", "Selected Group - ID: ${selectedGroup!!.id}, Name: ${selectedGroup!!.name}")
+                    //AndroidLog.d("RegisterScreen", "Selected Group - ID: ${selectedGroup!!.id}, Name: ${selectedGroup!!.name}")
                     vm.register(
                         login = login,
                         email = email,
@@ -286,7 +286,7 @@ fun RegisterScreen(vm: AuthViewModel, onRegistered: () -> Unit, onGoToLogin: () 
             CircularProgressIndicator()
         }
         
-        // Display success with token info
+        // Display success with token info  ???
         if (state.registrationSuccess && state.token != null) {
             Spacer(Modifier.height(16.dp))
             Card(
@@ -422,11 +422,11 @@ fun LoginScreen(vm: AuthViewModel, onLoggedIn: () -> Unit) {
 fun UsersScreen(vm: AuthViewModel, onLogout: () -> Unit) {
     val state = vm.uiState.collectAsState().value
 
-    LaunchedEffect(Unit) {
+    //LaunchedEffect(Unit) {
         if (state.token != null) {
             vm.loadUsers()
-        }
-    }
+   //     }
+   // }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Button(onClick = onLogout) { Text("Logout") }
@@ -444,7 +444,7 @@ fun UsersScreen(vm: AuthViewModel, onLogout: () -> Unit) {
 }
 
 @Composable
-private fun UsersList(users: List<UserDto>) {
+fun UsersList(users: List<UserDto>) {
     LazyColumn(
         contentPadding = PaddingValues(vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)

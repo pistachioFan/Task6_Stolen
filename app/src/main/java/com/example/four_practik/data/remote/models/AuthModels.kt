@@ -1,7 +1,9 @@
 package com.example.four_practik.data.remote.models
 
 import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class PersonDto(
     val firstName: String,
     val lastName: String,
@@ -11,6 +13,7 @@ data class PersonDto(
     val groupId: Int
 )
 
+@Serializable
 data class RegisterRequest(
     val login: String,
     val password: String,
@@ -21,28 +24,27 @@ data class RegisterRequest(
     val person: PersonDto
 )
 
-data class RegisterResponse(
-    val id: Int? = null,
+@Serializable
+data class AuthResponse(
     val token: String? = null
 )
 
+@Serializable
 data class LoginRequest(
     val login: String,
     val password: String
 )
 
-data class LoginResponse(
-    val token: String?
-)
 
-data class UsersResponse(
+/*data class UsersResponse(
     val page: Int,
     val per_page: Int,
     val total: Int,
     val total_pages: Int,
     val data: List<UserDto>
-)
+)*/
 
+@Serializable
 data class UserDto(
     val userId: Int? = null,
     val login: String? = null,
@@ -55,6 +57,7 @@ data class UserDto(
     val lastLoginDate: String? = null
 )
 
+@Serializable
 data class GroupDto(
     @SerializedName("groupId")
     val id: Int,
@@ -63,9 +66,10 @@ data class GroupDto(
 )
 
 // In case the API wraps the response
+@Serializable
 data class GroupsResponse(
     val groups: List<GroupDto>? = null,
-    val data: List<GroupDto>? = null
+    //val data: List<GroupDto>? = null
 )
 
 
