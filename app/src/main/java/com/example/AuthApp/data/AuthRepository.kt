@@ -1,15 +1,15 @@
-package com.example.four_practik.data
+package com.example.AuthApp.data
 
 import android.util.Log
-import com.example.four_practik.data.remote.ApiProvider
-import com.example.four_practik.data.remote.ReqResApi
-import com.example.four_practik.data.remote.models.GroupDto
-import com.example.four_practik.data.remote.models.GroupsResponse
-import com.example.four_practik.data.remote.models.LoginRequest
-import com.example.four_practik.data.remote.models.PersonDto
-import com.example.four_practik.data.remote.models.UserDto
-import com.example.four_practik.data.remote.models.RegisterRequest
-import com.google.gson.Gson
+import com.example.AuthApp.data.remote.ApiProvider
+import com.example.AuthApp.data.remote.ReqResApi
+import com.example.AuthApp.data.remote.models.AuthResponse
+import com.example.AuthApp.data.remote.models.GroupDto
+import com.example.AuthApp.data.remote.models.LoginRequest
+import com.example.AuthApp.data.remote.models.PersonDto
+import com.example.AuthApp.data.remote.models.UserDto
+import com.example.AuthApp.data.remote.models.RegisterRequest
+import retrofit2.Response
 
 class AuthRepository(
     private val api: ReqResApi = ApiProvider.api
@@ -25,7 +25,7 @@ class AuthRepository(
         dateOfBirth: String,
         gender: String,
         groupId: Int
-    ): Result<Pair<String, Int>> {
+    ): Result<String> {
         return try {
             val person = PersonDto(
                 firstName = firstName,
@@ -46,30 +46,8 @@ class AuthRepository(
             )
 
             val response = api.register(request)
-            val responseCode = response.code()
-            
-            if (response.isSuccessful) {
-                try {
-                    val responseBody = response.body()
-                    val token = responseBody?.token
-
-                    if (!token.isNullOrBlank()) {
-                        Result.success(Pair(token, responseCode))
-                    } else {
-                        Result.failure(Exception("Empty token. Response code: $responseCode"))
-                    }
-                } catch (e: Exception) {
-                    Result.failure(Exception("Parse error: ${e.message}"))
-                }
-            } else {
-                val errorBody = response.errorBody()?.string()
-                Log.e("AuthRepository", "Register failed: HTTP $responseCode - ${response.message()}")
-                Log.e("AuthRepository", "Error body: $errorBody")
-                Result.failure(Exception("Register failed: HTTP $responseCode - ${response.message()}${if (!errorBody.isNullOrBlank()) "\n$errorBody" else ""}"))
-            }
+            handleAuthResponse(response)
         } catch (t: Throwable) {
-            Log.e("AuthRepository", "Register exception: ${t.message}", t)
-            Log.e("AuthRepository", "Exception type: ${t.javaClass.simpleName}", t)
             if (t.message?.contains("BEGIN_OBJECT") == true || t.message?.contains("BEGIN_ARRAY") == true) {
                 Result.failure(Exception("JSON parsing error - check if API response format matches expected model. Error: ${t.message}"))
             } else {
@@ -78,36 +56,12 @@ class AuthRepository(
         }
     }
 
-    suspend fun login(login: String, password: String): Result<Pair<String, Int>> {
+    suspend fun login(login: String,
+                      password: String): Result<String> {
         return try {
             val response = api.login(LoginRequest(login, password))
-            val responseCode = response.code()
-            
-            if (response.isSuccessful) {
-                try {
-                    val responseBody = response.body()
-                    val token = responseBody?.token
-                    Log.d("AuthRepository", "Login Response Token: $token")
-                    if (!token.isNullOrBlank()) {
-                        Result.success(Pair(token, responseCode))
-                    } else {
-                        Log.e("AuthRepository", "Empty token received. Response code: $responseCode")
-                        Result.failure(Exception("Empty token. Response code: $responseCode"))
-                    }
-                } catch (e: Exception) {
-                    Log.e("AuthRepository", "Error parsing login response: ${e.message}", e)
-                    Log.e("AuthRepository", "Exception type: ${e.javaClass.simpleName}")
-                    Result.failure(Exception("Parse error: ${e.message}"))
-                }
-            } else {
-                val errorBody = response.errorBody()?.string()
-                Log.e("AuthRepository", "Login failed: HTTP $responseCode - ${response.message()}")
-                Log.e("AuthRepository", "Error body: $errorBody")
-                Result.failure(Exception("Login failed: HTTP $responseCode - ${response.message()}${if (!errorBody.isNullOrBlank()) "\n$errorBody" else ""}"))
-            }
+            handleAuthResponse(response)
         } catch (t: Throwable) {
-            Log.e("AuthRepository", "Login exception: ${t.message}", t)
-            Log.e("AuthRepository", "Exception type: ${t.javaClass.simpleName}", t)
             if (t.message?.contains("BEGIN_OBJECT") == true || t.message?.contains("BEGIN_ARRAY") == true) {
                 Result.failure(Exception("JSON parsing error - check if API response format matches expected model. Error: ${t.message}"))
             } else {
@@ -155,6 +109,25 @@ class AuthRepository(
             } else {
                 Result.failure(t)
             }
+        }
+    }
+    private fun handleAuthResponse(response: Response<AuthResponse>): Result<String>{
+        val responseCode = response.code()
+        return if (response.isSuccessful) {
+            try {
+                val responseBody = response.body()
+                val token = responseBody?.token
+                if (!token.isNullOrBlank()) {
+                    Result.success(token)
+                } else {
+                    Result.failure(Exception("Empty token. Response code: $responseCode"))
+                }
+            } catch (e: Exception) {
+                Result.failure(Exception("Parse error: ${e.message}"))
+            }
+        } else {
+            val errorBody = response.errorBody()?.string()
+            Result.failure(Exception("Authorization failed: HTTP $responseCode - ${response.message()}${if (!errorBody.isNullOrBlank()) "\n$errorBody" else ""}"))
         }
     }
 }

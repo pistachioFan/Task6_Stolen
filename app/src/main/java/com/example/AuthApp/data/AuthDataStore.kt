@@ -1,4 +1,4 @@
-package com.example.four_practik.data
+package com.example.AuthApp.data
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
@@ -7,9 +7,11 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-private val Context.dataStore by preferencesDataStore(name = "auth")
 
-class AuthDataStore(private val context: Context) {
+
+val Context.dataStore by preferencesDataStore(name = "auth")
+
+class AuthDataStore (val context: Context){
     private val TOKEN_KEY = stringPreferencesKey("token")
 
     val tokenFlow: Flow<String?> = context.dataStore.data.map { prefs ->

@@ -2,14 +2,15 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+
 }
 
 android {
-    namespace = "com.example.four_practik"
+    namespace = "com.example.AuthApp"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.four_practik"
+        applicationId = "com.example.AuthApp"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

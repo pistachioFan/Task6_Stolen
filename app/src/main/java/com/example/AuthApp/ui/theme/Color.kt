@@ -1,6 +1,5 @@
-package com.example.four_practik.ui.theme
+package com.example.AuthApp.ui.theme
 
-import android.annotation.SuppressLint
 import androidx.compose.ui.graphics.Color
 
 val Purple80 = Color(0xFFD0BCFF)

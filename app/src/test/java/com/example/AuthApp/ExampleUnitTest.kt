@@ -1,4 +1,4 @@
-package com.example.four_practik
+package com.example.AuthApp
 
 import org.junit.Test
 

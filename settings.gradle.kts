@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "four_practik"
+rootProject.name = "AuthApp"
 include(":app")
  

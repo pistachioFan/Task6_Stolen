@@ -1,4 +1,4 @@
-package com.example.four_practik
+package com.example.AuthApp
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

@@ -1,4 +1,4 @@
-package com.example.four_practik.ui.theme
+package com.example.AuthApp.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

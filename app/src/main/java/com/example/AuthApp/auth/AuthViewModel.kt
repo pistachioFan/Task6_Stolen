@@ -1,39 +1,30 @@
-package com.example.four_practik.auth
+package com.example.AuthApp.auth
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.four_practik.data.AuthDataStore
-import com.example.four_practik.data.AuthRepository
-import com.example.four_practik.data.remote.models.GroupDto
-import com.example.four_practik.data.remote.models.UserDto
+import com.example.AuthApp.data.AuthDataStore
+import com.example.AuthApp.data.AuthRepository
+import com.example.AuthApp.data.TokenManager
+
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-data class AuthUiState(
-    val isLoading: Boolean = false,
-    val errorMessage: String? = null,
-    val token: String? = null,
-    val tokenResponseCode: Int? = null,
-    val registrationSuccess: Boolean = false,
-    val users: List<UserDto> = emptyList(),
-    val groups: List<GroupDto> = emptyList()
-)
 
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository = AuthRepository()
-    private val dataStore = AuthDataStore(application)
-
+    val dataStore = AuthDataStore(application)
+    val repository = AuthRepository()
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
-            val token = dataStore.tokenFlow.first()
-            _uiState.value = _uiState.value.copy(token = token)
+            TokenManager.token = dataStore.tokenFlow.first()
+            //val token = dataStore.tokenFlow.first()
+            //_uiState.value = _uiState.value.copy(token = token)
         }
     }
 
@@ -64,23 +55,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 gender = gender,
                 groupId = groupId
             )
-            result.onSuccess { (token, responseCode) ->
-                viewModelScope.launch { dataStore.saveToken(token) }
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    token = token,
-                    tokenResponseCode = responseCode,
-                    registrationSuccess = true,
-                    errorMessage = null
-                )
-                onSuccess()
-            }.onFailure { e ->
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    errorMessage = e.message,
-                    registrationSuccess = false
-                )
-            }
+            authHandler(result, onSuccess)
         }
     }
 
@@ -88,21 +63,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
             val result = repository.login(login, password)
-            result.onSuccess { (token, responseCode) ->
-                viewModelScope.launch { dataStore.saveToken(token) }
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    token = token,
-                    tokenResponseCode = responseCode,
-                    errorMessage = null
-                )
-                onSuccess()
-            }.onFailure { e ->
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    errorMessage = e.message
-                )
-            }
+            authHandler(result, onSuccess)
         }
     }
 
@@ -128,7 +89,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     fun loadUsers() {
         viewModelScope.launch {
-            val token = _uiState.value.token
+            val token = TokenManager.token //_uiState.value.token
             if (token == null) {
                 _uiState.value = _uiState.value.copy(errorMessage = "No token available")
                 return@launch
@@ -140,6 +101,27 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             }.onFailure { e ->
                 _uiState.value = _uiState.value.copy(isLoading = false, errorMessage = e.message)
             }
+        }
+    }
+    private fun authHandler(result: Result<String>,
+                                    onSuccess: () -> Unit){
+        result.onSuccess { token ->
+            viewModelScope.launch { dataStore.saveToken(token) }
+            TokenManager.token = token
+            _uiState.value = _uiState.value.copy(
+                isLoading = false,
+                //token = token,
+                errorMessage = null
+            )
+            onSuccess()
+        }.onFailure { e ->
+            _uiState.value = _uiState.value.copy(
+                isLoading = false,
+                errorMessage = e.message
+                //token = null
+            )
+                TokenManager.token = null
+
         }
     }
 }

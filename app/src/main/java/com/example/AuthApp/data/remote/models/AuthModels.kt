@@ -1,4 +1,4 @@
-package com.example.four_practik.data.remote.models
+package com.example.AuthApp.data.remote.models
 
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
