@@ -70,7 +70,8 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     fun logout(onLoggedOut: () -> Unit) {
         viewModelScope.launch {
             dataStore.clearToken()
-            _uiState.value = _uiState.value.copy(token = null, users = emptyList())
+            TokenManager.token = null
+            _uiState.value = _uiState.value.copy(users = emptyList())
             onLoggedOut()
         }
     }
@@ -95,7 +96,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 return@launch
             }
             _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
-            val result = repository.getUsers(token)
+            val result = repository.getUsers()
             result.onSuccess { users ->
                 _uiState.value = _uiState.value.copy(isLoading = false, users = users)
             }.onFailure { e ->
@@ -120,8 +121,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 errorMessage = e.message
                 //token = null
             )
-                TokenManager.token = null
-
+            TokenManager.token = null
         }
     }
 }

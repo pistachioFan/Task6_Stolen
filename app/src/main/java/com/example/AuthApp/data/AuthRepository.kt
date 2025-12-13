@@ -1,6 +1,5 @@
 package com.example.AuthApp.data
 
-import android.util.Log
 import com.example.AuthApp.data.remote.ApiProvider
 import com.example.AuthApp.data.remote.ReqResApi
 import com.example.AuthApp.data.remote.models.AuthResponse
@@ -78,7 +77,7 @@ class AuthRepository(
                 // Handle direct list response
                 if (body is List<*>) {
                     @Suppress("UNCHECKED_CAST")
-                    Result.success(body ?: emptyList())
+                    Result.success(body)
                 } else {
                     // Handle wrapped response or empty
                     Result.success(emptyList())
@@ -91,19 +90,16 @@ class AuthRepository(
         }
     }
 
-    suspend fun getUsers(token: String): Result<List<UserDto>> {
+    suspend fun getUsers(): Result<List<UserDto>> {
         return try {
-            val response = api.getUsers("Bearer $token")
+            val response = api.getUsers()
             if (response.isSuccessful) {
                 Result.success(response.body() ?: emptyList())
             } else {
                 val errorBody = response.errorBody()?.string()
-                Log.e("AuthRepository", "Users failed: HTTP ${response.code()} - ${response.message()}")
-                Log.e("AuthRepository", "Error body: $errorBody")
                 Result.failure(Exception("Users failed: HTTP ${response.code()} - ${response.message()}${if (!errorBody.isNullOrBlank()) "\n$errorBody" else ""}"))
             }
         } catch (t: Throwable) {
-            Log.e("AuthRepository", "Users exception: ${t.message}", t)
             if (t.message?.contains("BEGIN_OBJECT") == true || t.message?.contains("BEGIN_ARRAY") == true) {
                 Result.failure(Exception("JSON parsing error - check if API response format matches expected model. Error: ${t.message}"))
             } else {

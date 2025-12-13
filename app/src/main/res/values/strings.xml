@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Auth App</string>
+    <string name="logout">Logout</string>
+    <string name="register">Register</string>
+    <string name="login_textfield">Login</string>
+    <string name="password_textfield">Password *</string>
+    <string name="group_selecter">Group</string>
+    <string name="reg_n_logout"> Register &amp; Logout</string>
+    <string name="go_to_login"> Go to Login </string>
+    <string name="login">Login</string>
+    <string name="need_to_login">Please login to view users</string>
 </resources>

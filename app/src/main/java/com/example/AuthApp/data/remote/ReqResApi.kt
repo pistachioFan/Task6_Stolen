@@ -8,12 +8,9 @@ import com.example.AuthApp.data.remote.models.UserDto
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Headers
 import retrofit2.http.POST
 
 interface ReqResApi {
-    @Headers("Content-Type: application/json")
     @POST("auth/register")
     suspend fun register(@Body body: RegisterRequest): Response<AuthResponse>
 
@@ -24,9 +21,7 @@ interface ReqResApi {
     suspend fun getGroups(): Response<List<GroupDto>>
 
     @GET("users")
-    suspend fun getUsers(
-        @Header("Authorization") token: String
-    ): Response<List<UserDto>>
+    suspend fun getUsers(): Response<List<UserDto>>
 
     // No companion object; creation handled by ApiProvider with configurable baseUrl
 }

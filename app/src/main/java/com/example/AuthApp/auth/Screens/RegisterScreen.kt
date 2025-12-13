@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -29,11 +27,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.AuthApp.auth.AuthViewModel
 import com.example.AuthApp.data.TokenManager
 import com.example.AuthApp.data.remote.models.GroupDto
+import com.example.AuthApp.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,13 +70,13 @@ fun RegisterScreen(vm: AuthViewModel, onRegistered: () -> Unit, onGoToLogin: () 
             .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Register", style = MaterialTheme.typography.headlineMedium)
+        Text(stringResource(R.string.register), style = MaterialTheme.typography.headlineMedium)
         Spacer(Modifier.height(16.dp))
 
         OutlinedTextField(
             value = login,
             onValueChange = { login = it },
-            label = { Text("Login *") },
+            label = { Text(stringResource(R.string.login_textfield)) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true
         )
@@ -85,7 +85,7 @@ fun RegisterScreen(vm: AuthViewModel, onRegistered: () -> Unit, onGoToLogin: () 
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password *") },
+            label = { Text(stringResource(R.string.password_textfield)) },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(),
             singleLine = true
@@ -102,7 +102,7 @@ fun RegisterScreen(vm: AuthViewModel, onRegistered: () -> Unit, onGoToLogin: () 
                 value = selectedGroup?.name ?: "",
                 onValueChange = {},
                 readOnly = true,
-                label = { Text("Group") },
+                label = { Text(stringResource(R.string.group_selecter)) },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 modifier = Modifier
                     .menuAnchor()
@@ -155,35 +155,15 @@ fun RegisterScreen(vm: AuthViewModel, onRegistered: () -> Unit, onGoToLogin: () 
             enabled = !state.isLoading && selectedGroup != null,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Register & Logout")
+            Text(stringResource(R.string.reg_n_logout))
         }
         Spacer(Modifier.height(8.dp))
         Button(onClick = onGoToLogin, modifier = Modifier.fillMaxWidth()) {
-            Text("Go to Login")
+            Text(stringResource(R.string.go_to_login))
         }
         if (state.isLoading) {
             Spacer(Modifier.height(16.dp))
             CircularProgressIndicator()
         }
-
-        // Display success with token info  ???
-        if (TokenManager.token != null) {
-            Spacer(Modifier.height(16.dp))
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer
-                )
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "Registration Successful!",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                }
-            }
-        }
-
     }
 }

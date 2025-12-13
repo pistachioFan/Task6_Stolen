@@ -35,8 +35,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.AuthApp.R
 import com.example.AuthApp.auth.AuthViewModel
+import com.example.AuthApp.data.TokenManager
 import com.example.AuthApp.data.remote.models.UserDto
 
 @Composable
@@ -44,17 +47,17 @@ fun UsersScreen(vm: AuthViewModel, onLogout: () -> Unit) {
     val state = vm.uiState.collectAsState().value
 
     LaunchedEffect(Unit) {
-        if (state.token != null) {
+        if (TokenManager.token != null) {
             vm.loadUsers()
         }
     }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        Button(onClick = onLogout) { Text("Logout") }
+        Button(onClick = onLogout) { Text(stringResource(R.string.logout)) }
         Spacer(Modifier.height(8.dp))
 
-        if (state.token == null) {
-            Text("Please login to view users")
+        if (TokenManager.token == null) {
+            Text(stringResource(R.string.need_to_login))
         } else if (state.isLoading) {
             CircularProgressIndicator()
         } else {

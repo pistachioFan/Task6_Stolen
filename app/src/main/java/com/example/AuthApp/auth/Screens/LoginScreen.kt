@@ -20,8 +20,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.AuthApp.R
 import com.example.AuthApp.auth.AuthViewModel
 
 @Composable
@@ -38,7 +40,7 @@ fun LoginScreen(vm: AuthViewModel, onLoggedIn: () -> Unit) {
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Login",
+            text = stringResource(R.string.login),
             style = MaterialTheme.typography.headlineMedium
         )
         Spacer(Modifier.height(24.dp))
@@ -46,7 +48,7 @@ fun LoginScreen(vm: AuthViewModel, onLoggedIn: () -> Unit) {
         OutlinedTextField(
             value = login,
             onValueChange = { login = it },
-            label = { Text("Login") },
+            label = { Text(stringResource(R.string.login)) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true
         )
@@ -55,7 +57,7 @@ fun LoginScreen(vm: AuthViewModel, onLoggedIn: () -> Unit) {
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") },
+            label = { Text(stringResource(R.string.password_textfield)) },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(),
             singleLine = true
@@ -67,7 +69,7 @@ fun LoginScreen(vm: AuthViewModel, onLoggedIn: () -> Unit) {
             enabled = !state.isLoading && login.isNotBlank() && password.isNotBlank(),
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Login")
+            Text(stringResource(R.string.login))
         }
 
         if (state.isLoading) {

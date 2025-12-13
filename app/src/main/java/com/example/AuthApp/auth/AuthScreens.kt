@@ -29,7 +29,6 @@ fun AuthApp() {
             RegisterScreen(
                 vm = vm,
                 onRegistered = {
-                    // as per assignment, logout right after registration
                     vm.logout { navController.navigate(AuthScreenRoute.Login.name) }
                 },
                 onGoToLogin = { navController.navigate(AuthScreenRoute.Login.name) }

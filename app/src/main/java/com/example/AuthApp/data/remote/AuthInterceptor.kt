@@ -13,12 +13,10 @@ class AuthInterceptor : Interceptor {
 
         val requestBuilder = originalRequest.newBuilder()
 
-
         val token = TokenManager.token
-        if (token != null) {
-            requestBuilder
-                .addHeader("Authorization", "Bearer $token")
-                .addHeader("Content-Type", "application/json")
+        requestBuilder.addHeader("Content-Type", "application/json")
+        token?.let {
+            requestBuilder.addHeader("Authorization", "Bearer $it")
         }
 
         return chain.proceed(requestBuilder.build())
